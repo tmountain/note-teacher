@@ -15,6 +15,7 @@ this in <http://guide.elm-lang.org/architecture/index.html>
 import Html exposing (..)
 import Html.Attributes exposing (id)
 import Html.Events exposing (onClick)
+import Random
 
 
 main =
@@ -30,9 +31,21 @@ main =
 -- MODEL
 
 
+type Note
+    = C
+    | D
+    | E
+    | F
+    | G
+    | A
+    | B
+
+
 type alias Model =
-    { note : String
+    { note : Note
     , position : Int
+    , correct : Int
+    , incorrect : Int
     }
 
 
@@ -41,7 +54,7 @@ type alias Model =
 
 
 initialModel =
-    Model "C" 4
+    Model C 4 0 0
 
 
 init : ( Model, Cmd Msg )
@@ -54,22 +67,105 @@ init =
 
 
 type Msg
-    = NewNote String
+    = NewNote Note
+    | Answer Note
+    | RandomNote
+
+
+
+-- Sends a string representing a note value to Javascript for rendering
 
 
 port renderStaff : String -> Cmd msg
 
 
-newNote : String -> Int -> String
+
+-- Generates a note corresponding to an integer for random note generation
+
+
+noteMapping : Int -> Note
+noteMapping int =
+    case int of
+        1 ->
+            C
+
+        2 ->
+            D
+
+        3 ->
+            E
+
+        4 ->
+            F
+
+        5 ->
+            G
+
+        6 ->
+            A
+
+        _ ->
+            B
+
+
+
+-- Takes a note and a position and returns a string suitable for rendering
+
+
+newNote : Note -> Int -> String
 newNote note position =
-    note ++ (toString position) ++ "/w"
+    (toString note) ++ (toString position) ++ "/w"
+
+
+
+-- Helper for handling NewNote updates. Ensures that a diff note is generated each time
+
+
+newNoteMsg : Note -> Model -> ( Model, Cmd Msg )
+newNoteMsg noteValue model =
+    if noteValue == model.note then
+        ( model, randomNoteCmd )
+    else
+        ( { model | note = noteValue }, renderStaff (newNote noteValue model.position) )
+
+
+answerMsg : Note -> Model -> ( Model, Cmd Msg )
+answerMsg noteValue model =
+    if noteValue == model.note then
+        ( { model | correct = model.correct + 1 }, randomNoteCmd )
+    else
+        ( { model | incorrect = model.incorrect + 1 }, randomNoteCmd )
+
+
+
+-- Generates a random integer mapping to a note via noteMapping
+
+
+note : Random.Generator Note
+note =
+    Random.map noteMapping (Random.int 1 7)
+
+
+
+-- Generates a NewNote command using the note function to get a random note mapping
+
+
+randomNoteCmd : Cmd Msg
+randomNoteCmd =
+    Random.generate NewNote note
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         NewNote noteValue ->
-            ( { model | note = noteValue }, renderStaff (newNote noteValue model.position) )
+            newNoteMsg noteValue model
+
+        Answer noteValue ->
+            answerMsg noteValue model
+
+        RandomNote ->
+            ( model, randomNoteCmd )
 
 
 
@@ -89,12 +185,27 @@ view : Model -> Html Msg
 view model =
     div [ id "app" ]
         [ viewStaff
-        , viewButton "C"
-        , viewButton "D"
-        , viewButton "E"
-        , viewButton "F"
-        , viewButton "G"
+        , viewAnswerButton C
+        , viewAnswerButton D
+        , viewAnswerButton E
+        , viewAnswerButton F
+        , viewAnswerButton G
+        , viewAnswerButton A
+        , viewAnswerButton B
+        , viewRandomButton
+        , viewCorrect model
+        , viewIncorrect model
         ]
+
+
+viewCorrect : Model -> Html Msg
+viewCorrect model =
+    div [] [ text ("Correct (" ++ (toString model.correct) ++ ")") ]
+
+
+viewIncorrect : Model -> Html Msg
+viewIncorrect model =
+    div [] [ text ("Incorrect (" ++ (toString model.incorrect) ++ ")") ]
 
 
 viewStaff : Html Msg
@@ -102,10 +213,17 @@ viewStaff =
     div [ id "staff" ] []
 
 
-viewButton : String -> Html Msg
-viewButton noteValue =
+viewRandomButton : Html Msg
+viewRandomButton =
     button
-        [ onClick (NewNote noteValue)
+        [ onClick RandomNote ]
+        [ text "Random Note" ]
+
+
+viewAnswerButton : Note -> Html Msg
+viewAnswerButton noteValue =
+    button
+        [ onClick (Answer noteValue)
         ]
-        [ text noteValue
+        [ text (toString noteValue)
         ]
