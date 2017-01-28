@@ -16,13 +16,8 @@
 var app = Elm.Notes.fullscreen();
 
 app.ports.renderStaff.subscribe(function(note) {
-    initVex("app");
-    renderStaff(note);
+    drawNote("staff", note, "treble");
 });
-
-function renderStaff(note) {
-    // render the staff
-}
 </script>
 
 </html>

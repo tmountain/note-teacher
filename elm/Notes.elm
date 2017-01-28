@@ -14,6 +14,7 @@ this in <http://guide.elm-lang.org/architecture/index.html>
 
 import Html exposing (..)
 import Html.Attributes exposing (id)
+import Html.Events exposing (onClick)
 
 
 main =
@@ -40,7 +41,7 @@ type alias Model =
 
 
 initialModel =
-    Model "c" 4
+    Model "C" 4
 
 
 init : ( Model, Cmd Msg )
@@ -53,7 +54,7 @@ init =
 
 
 type Msg
-    = NewNote
+    = NewNote String
 
 
 port renderStaff : String -> Cmd msg
@@ -61,14 +62,14 @@ port renderStaff : String -> Cmd msg
 
 newNote : String -> Int -> String
 newNote note position =
-    note ++ "/" ++ (toString position)
+    note ++ (toString position) ++ "/w"
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        NewNote ->
-            ( model, renderStaff (newNote model.note model.position) )
+        NewNote noteValue ->
+            ( { model | note = noteValue }, renderStaff (newNote noteValue model.position) )
 
 
 
@@ -87,4 +88,24 @@ subscriptions model =
 view : Model -> Html Msg
 view model =
     div [ id "app" ]
-        [ text "hello app" ]
+        [ viewStaff
+        , viewButton "C"
+        , viewButton "D"
+        , viewButton "E"
+        , viewButton "F"
+        , viewButton "G"
+        ]
+
+
+viewStaff : Html Msg
+viewStaff =
+    div [ id "staff" ] []
+
+
+viewButton : String -> Html Msg
+viewButton noteValue =
+    button
+        [ onClick (NewNote noteValue)
+        ]
+        [ text noteValue
+        ]
