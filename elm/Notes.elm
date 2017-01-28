@@ -239,17 +239,6 @@ view model =
         [ nav model
         , viewStaff
         , footer model
-          {- , viewAnswerButton C
-             , viewAnswerButton D
-             , viewAnswerButton E
-             , viewAnswerButton F
-             , viewAnswerButton G
-             , viewAnswerButton A
-             , viewAnswerButton B
-             , viewRandomButton
-             , viewCorrect model
-             , viewIncorrect model
-          -}
         ]
 
 
@@ -259,16 +248,21 @@ view model =
 
 footer : Model -> Html Msg
 footer model =
-    div [ class "footer flex-row" ]
-        [ viewNoteButton C model
-        , viewNoteButton D model
-        , viewNoteButton E model
-        , viewNoteButton F model
-        , viewNoteButton G model
-        , viewNoteButton A model
-        , viewNoteButton B model
+    div []
+        [ div [ class "footer flex-row" ]
+            [ viewNoteButton C model
+            , viewNoteButton D model
+            , viewNoteButton E model
+            ]
+            |> Material.Scheme.topWithScheme Color.LightBlue Color.Red
+        , div [ class "footer flex-row" ]
+            [ viewNoteButton F model
+            , viewNoteButton G model
+            , viewNoteButton A model
+            , viewNoteButton B model
+            ]
+            |> Material.Scheme.topWithScheme Color.LightBlue Color.Red
         ]
-        |> Material.Scheme.topWithScheme Color.LightBlue Color.Red
 
 
 instructions : Html Msg

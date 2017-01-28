@@ -15773,12 +15773,6 @@ var _user$project$Notes$instructions = A2(
 		_0: _elm_lang$html$Html$text('Tap the Spacebar'),
 		_1: {ctor: '[]'}
 	});
-var _user$project$Notes$appStyle = _elm_lang$html$Html_Attributes$style(
-	{
-		ctor: '::',
-		_0: {ctor: '_Tuple2', _0: 'font-family', _1: 'Open Sans Condensed\', sans-serif'},
-		_1: {ctor: '[]'}
-	});
 var _user$project$Notes$settingsIcon = A2(
 	_elm_lang$html$Html$div,
 	{
@@ -15953,27 +15947,49 @@ var _user$project$Notes$viewNoteButton = F2(
 			});
 	});
 var _user$project$Notes$footer = function (model) {
-	return A3(
-		_debois$elm_mdl$Material_Scheme$topWithScheme,
-		_debois$elm_mdl$Material_Color$LightBlue,
-		_debois$elm_mdl$Material_Color$Red,
-		A2(
-			_elm_lang$html$Html$div,
-			{
-				ctor: '::',
-				_0: _elm_lang$html$Html_Attributes$class('footer flex-row'),
-				_1: {ctor: '[]'}
-			},
-			{
-				ctor: '::',
-				_0: A2(_user$project$Notes$viewNoteButton, _user$project$Notes$C, model),
-				_1: {
-					ctor: '::',
-					_0: A2(_user$project$Notes$viewNoteButton, _user$project$Notes$D, model),
-					_1: {
+	return A2(
+		_elm_lang$html$Html$div,
+		{ctor: '[]'},
+		{
+			ctor: '::',
+			_0: A3(
+				_debois$elm_mdl$Material_Scheme$topWithScheme,
+				_debois$elm_mdl$Material_Color$LightBlue,
+				_debois$elm_mdl$Material_Color$Red,
+				A2(
+					_elm_lang$html$Html$div,
+					{
 						ctor: '::',
-						_0: A2(_user$project$Notes$viewNoteButton, _user$project$Notes$E, model),
+						_0: _elm_lang$html$Html_Attributes$class('footer flex-row'),
+						_1: {ctor: '[]'}
+					},
+					{
+						ctor: '::',
+						_0: A2(_user$project$Notes$viewNoteButton, _user$project$Notes$C, model),
 						_1: {
+							ctor: '::',
+							_0: A2(_user$project$Notes$viewNoteButton, _user$project$Notes$D, model),
+							_1: {
+								ctor: '::',
+								_0: A2(_user$project$Notes$viewNoteButton, _user$project$Notes$E, model),
+								_1: {ctor: '[]'}
+							}
+						}
+					})),
+			_1: {
+				ctor: '::',
+				_0: A3(
+					_debois$elm_mdl$Material_Scheme$topWithScheme,
+					_debois$elm_mdl$Material_Color$LightBlue,
+					_debois$elm_mdl$Material_Color$Red,
+					A2(
+						_elm_lang$html$Html$div,
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html_Attributes$class('footer flex-row'),
+							_1: {ctor: '[]'}
+						},
+						{
 							ctor: '::',
 							_0: A2(_user$project$Notes$viewNoteButton, _user$project$Notes$F, model),
 							_1: {
@@ -15989,10 +16005,10 @@ var _user$project$Notes$footer = function (model) {
 									}
 								}
 							}
-						}
-					}
-				}
-			}));
+						})),
+				_1: {ctor: '[]'}
+			}
+		});
 };
 var _user$project$Notes$view = function (model) {
 	return A2(
@@ -16003,11 +16019,7 @@ var _user$project$Notes$view = function (model) {
 			_1: {
 				ctor: '::',
 				_0: _elm_lang$html$Html_Attributes$class('flex-column'),
-				_1: {
-					ctor: '::',
-					_0: _user$project$Notes$appStyle,
-					_1: {ctor: '[]'}
-				}
+				_1: {ctor: '[]'}
 			}
 		},
 		{
