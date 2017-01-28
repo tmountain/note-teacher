@@ -4,7 +4,7 @@ function drawNote(elementID, note, clef)
     document.getElementById(elementID).innerHTML = "";
 
     var vf = new Vex.Flow.Factory({
-        renderer: {selector: elementID, width: 200, height: 200}
+        renderer: {selector: elementID, width: 250, height: 150}
     });
 
     var score = vf.EasyScore();

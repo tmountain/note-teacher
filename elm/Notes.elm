@@ -13,8 +13,12 @@ this in <http://guide.elm-lang.org/architecture/index.html>
 -}
 
 import Html exposing (..)
-import Html.Attributes exposing (id)
+import Html.Attributes exposing (id, class)
 import Html.Events exposing (onClick)
+import Material
+import Material.Scheme
+import Material.Button as Button
+import Material.Options as Options exposing (css)
 import Random
 
 
@@ -46,6 +50,9 @@ type alias Model =
     , position : Int
     , correct : Int
     , incorrect : Int
+    , mdl :
+        Material.Model
+        -- Boilerplate: model store for any and all Mdl components you use.
     }
 
 
@@ -54,7 +61,7 @@ type alias Model =
 
 
 initialModel =
-    Model C 4 0 0
+    Model C 4 0 0 Material.model
 
 
 init : ( Model, Cmd Msg )
@@ -70,6 +77,7 @@ type Msg
     = NewNote Note
     | Answer Note
     | RandomNote
+    | Mdl (Material.Msg Msg)
 
 
 
@@ -167,6 +175,10 @@ update msg model =
         RandomNote ->
             ( model, randomNoteCmd )
 
+        -- Boilerplate: Mdl action handler.
+        Mdl msg_ ->
+            Material.update Mdl msg_ model
+
 
 
 -- SUBSCRIPTIONS
@@ -181,40 +193,104 @@ subscriptions model =
 -- VIEW
 
 
-view : Model -> Html Msg
-view model =
-    div [ id "app" ]
-        [ viewStaff
-        , viewAnswerButton C
-        , viewAnswerButton D
-        , viewAnswerButton E
-        , viewAnswerButton F
-        , viewAnswerButton G
-        , viewAnswerButton A
-        , viewAnswerButton B
-        , viewRandomButton
+type alias Mdl =
+    Material.Model
+
+
+
+-- NAV
+
+
+nav : Model -> Html Msg
+nav model =
+    div [ class "nav flex-row" ]
+        [ logo model
+        , settingsIcon
+        ]
+
+
+logo : Model -> Html Msg
+logo model =
+    div [ class "logo" ]
+        [ text "NOTE TEACHER: "
         , viewCorrect model
+        , text ", "
         , viewIncorrect model
         ]
 
 
+settingsIcon : Html Msg
+settingsIcon =
+    div [ class "settings-icon" ]
+        [ span [ class "fa fa-cog" ] [] ]
+
+
+
+-- MAIN AREA
+
+
+view : Model -> Html Msg
+view model =
+    div [ id "app", class "flex-column" ]
+        [ nav model
+        , viewStaff
+        , footer model
+          {- , viewAnswerButton C
+             , viewAnswerButton D
+             , viewAnswerButton E
+             , viewAnswerButton F
+             , viewAnswerButton G
+             , viewAnswerButton A
+             , viewAnswerButton B
+             , viewRandomButton
+             , viewCorrect model
+             , viewIncorrect model
+          -}
+        ]
+
+
+
+-- FOOTER
+
+
+footer : Model -> Html Msg
+footer model =
+    div [ class "footer flex-row" ]
+        [ viewNoteButton C model
+        , viewNoteButton D model
+        , viewNoteButton E model
+        , viewNoteButton F model
+        , viewNoteButton G model
+        , viewNoteButton A model
+        , viewNoteButton B model
+        ]
+        |> Material.Scheme.top
+
+
+instructions : Html Msg
+instructions =
+    div [ class "instructions" ] [ text "Tap the Spacebar" ]
+
+
 viewCorrect : Model -> Html Msg
 viewCorrect model =
-    div [] [ text ("Correct (" ++ (toString model.correct) ++ ")") ]
+    span [] [ text ("Correct (" ++ (toString model.correct) ++ ")") ]
 
 
 viewIncorrect : Model -> Html Msg
 viewIncorrect model =
-    div [] [ text ("Incorrect (" ++ (toString model.incorrect) ++ ")") ]
+    span [] [ text ("Incorrect (" ++ (toString model.incorrect) ++ ")") ]
 
 
 viewStaff : Html Msg
 viewStaff =
-    div
-        [ id "staff"
-        , class "note"
+    div [ class "note-box" ]
+        [ div
+            [ id "staff"
+            , class "note"
+            ]
+            []
         ]
-        []
 
 
 viewRandomButton : Html Msg
@@ -222,6 +298,18 @@ viewRandomButton =
     button
         [ onClick RandomNote ]
         [ text "Random Note" ]
+
+
+viewNoteButton : Note -> Model -> Html Msg
+viewNoteButton noteValue model =
+    Button.render Mdl
+        [ 0 ]
+        model.mdl
+        [ Button.fab
+        , Button.colored
+        , Options.onClick (Answer noteValue)
+        ]
+        [ text (toString noteValue) ]
 
 
 viewAnswerButton : Note -> Html Msg
