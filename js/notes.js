@@ -15730,34 +15730,30 @@ var _user$project$Notes$viewStaff = A2(
 var _user$project$Notes$viewIncorrect = function (model) {
 	return A2(
 		_elm_lang$html$Html$span,
-		{ctor: '[]'},
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$class('fa fa-close'),
+			_1: {ctor: '[]'}
+		},
 		{
 			ctor: '::',
 			_0: _elm_lang$html$Html$text(
-				A2(
-					_elm_lang$core$Basics_ops['++'],
-					'Incorrect (',
-					A2(
-						_elm_lang$core$Basics_ops['++'],
-						_elm_lang$core$Basics$toString(model.incorrect),
-						')'))),
+				_elm_lang$core$Basics$toString(model.incorrect)),
 			_1: {ctor: '[]'}
 		});
 };
 var _user$project$Notes$viewCorrect = function (model) {
 	return A2(
 		_elm_lang$html$Html$span,
-		{ctor: '[]'},
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$class('fa fa-check'),
+			_1: {ctor: '[]'}
+		},
 		{
 			ctor: '::',
 			_0: _elm_lang$html$Html$text(
-				A2(
-					_elm_lang$core$Basics_ops['++'],
-					'Correct (',
-					A2(
-						_elm_lang$core$Basics_ops['++'],
-						_elm_lang$core$Basics$toString(model.correct),
-						')'))),
+				_elm_lang$core$Basics$toString(model.correct)),
 			_1: {ctor: '[]'}
 		});
 };
@@ -15773,25 +15769,43 @@ var _user$project$Notes$instructions = A2(
 		_0: _elm_lang$html$Html$text('Tap the Spacebar'),
 		_1: {ctor: '[]'}
 	});
-var _user$project$Notes$settingsIcon = A2(
-	_elm_lang$html$Html$div,
-	{
-		ctor: '::',
-		_0: _elm_lang$html$Html_Attributes$class('settings-icon'),
-		_1: {ctor: '[]'}
-	},
-	{
-		ctor: '::',
-		_0: A2(
-			_elm_lang$html$Html$span,
-			{
+var _user$project$Notes$settingsIcon = function (model) {
+	return A2(
+		_elm_lang$html$Html$div,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$class('settings-icon'),
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: _user$project$Notes$viewCorrect(model),
+			_1: {
 				ctor: '::',
-				_0: _elm_lang$html$Html_Attributes$class('fa fa-cog'),
-				_1: {ctor: '[]'}
-			},
-			{ctor: '[]'}),
-		_1: {ctor: '[]'}
-	});
+				_0: _elm_lang$html$Html$text('  '),
+				_1: {
+					ctor: '::',
+					_0: _user$project$Notes$viewIncorrect(model),
+					_1: {
+						ctor: '::',
+						_0: _elm_lang$html$Html$text('  '),
+						_1: {
+							ctor: '::',
+							_0: A2(
+								_elm_lang$html$Html$span,
+								{
+									ctor: '::',
+									_0: _elm_lang$html$Html_Attributes$class('fa fa-cog'),
+									_1: {ctor: '[]'}
+								},
+								{ctor: '[]'}),
+							_1: {ctor: '[]'}
+						}
+					}
+				}
+			}
+		});
+};
 var _user$project$Notes$logo = function (model) {
 	return A2(
 		_elm_lang$html$Html$div,
@@ -15802,20 +15816,8 @@ var _user$project$Notes$logo = function (model) {
 		},
 		{
 			ctor: '::',
-			_0: _elm_lang$html$Html$text('NOTE TEACHER: '),
-			_1: {
-				ctor: '::',
-				_0: _user$project$Notes$viewCorrect(model),
-				_1: {
-					ctor: '::',
-					_0: _elm_lang$html$Html$text(', '),
-					_1: {
-						ctor: '::',
-						_0: _user$project$Notes$viewIncorrect(model),
-						_1: {ctor: '[]'}
-					}
-				}
-			}
+			_0: _elm_lang$html$Html$text('NOTE TEACHER'),
+			_1: {ctor: '[]'}
 		});
 };
 var _user$project$Notes$nav = function (model) {
@@ -15831,7 +15833,7 @@ var _user$project$Notes$nav = function (model) {
 			_0: _user$project$Notes$logo(model),
 			_1: {
 				ctor: '::',
-				_0: _user$project$Notes$settingsIcon,
+				_0: _user$project$Notes$settingsIcon(model),
 				_1: {ctor: '[]'}
 			}
 		});

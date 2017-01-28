@@ -206,24 +206,25 @@ nav : Model -> Html Msg
 nav model =
     div [ class "nav flex-row" ]
         [ logo model
-        , settingsIcon
+        , settingsIcon model
         ]
 
 
 logo : Model -> Html Msg
 logo model =
     div [ class "logo" ]
-        [ text "NOTE TEACHER: "
-        , viewCorrect model
-        , text ", "
-        , viewIncorrect model
-        ]
+        [ text "NOTE TEACHER" ]
 
 
-settingsIcon : Html Msg
-settingsIcon =
+settingsIcon : Model -> Html Msg
+settingsIcon model =
     div [ class "settings-icon" ]
-        [ span [ class "fa fa-cog" ] [] ]
+        [ viewCorrect model
+        , text "  "
+        , viewIncorrect model
+        , text "  "
+        , span [ class "fa fa-cog" ] []
+        ]
 
 
 
@@ -272,12 +273,12 @@ instructions =
 
 viewCorrect : Model -> Html Msg
 viewCorrect model =
-    span [] [ text ("Correct (" ++ (toString model.correct) ++ ")") ]
+    span [ class "fa fa-check" ] [ text (toString model.correct) ]
 
 
 viewIncorrect : Model -> Html Msg
 viewIncorrect model =
-    span [] [ text ("Incorrect (" ++ (toString model.incorrect) ++ ")") ]
+    span [ class "fa fa-close" ] [ text (toString model.incorrect) ]
 
 
 viewStaff : Html Msg
