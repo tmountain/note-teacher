@@ -13,10 +13,11 @@ this in <http://guide.elm-lang.org/architecture/index.html>
 -}
 
 import Html exposing (..)
-import Html.Attributes exposing (id, class)
+import Html.Attributes exposing (id, class, style)
 import Html.Events exposing (onClick)
 import Material
 import Material.Scheme
+import Material.Color as Color
 import Material.Button as Button
 import Material.Options as Options exposing (css)
 import Random
@@ -231,7 +232,10 @@ settingsIcon =
 
 view : Model -> Html Msg
 view model =
-    div [ id "app", class "flex-column" ]
+    div
+        [ id "app"
+        , class "flex-column"
+        ]
         [ nav model
         , viewStaff
         , footer model
@@ -264,7 +268,7 @@ footer model =
         , viewNoteButton A model
         , viewNoteButton B model
         ]
-        |> Material.Scheme.top
+        |> Material.Scheme.topWithScheme Color.LightBlue Color.Red
 
 
 instructions : Html Msg
