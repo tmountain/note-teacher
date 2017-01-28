@@ -15786,22 +15786,7 @@ var _user$project$Notes$settingsIcon = function (model) {
 				_1: {
 					ctor: '::',
 					_0: _user$project$Notes$viewIncorrect(model),
-					_1: {
-						ctor: '::',
-						_0: _elm_lang$html$Html$text('  '),
-						_1: {
-							ctor: '::',
-							_0: A2(
-								_elm_lang$html$Html$span,
-								{
-									ctor: '::',
-									_0: _elm_lang$html$Html_Attributes$class('fa fa-cog'),
-									_1: {ctor: '[]'}
-								},
-								{ctor: '[]'}),
-							_1: {ctor: '[]'}
-						}
-					}
+					_1: {ctor: '[]'}
 				}
 			}
 		});

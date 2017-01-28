@@ -222,8 +222,6 @@ settingsIcon model =
         [ viewCorrect model
         , text "  "
         , viewIncorrect model
-        , text "  "
-        , span [ class "fa fa-cog" ] []
         ]
 
 
