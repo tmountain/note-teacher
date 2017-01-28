@@ -210,7 +210,11 @@ viewIncorrect model =
 
 viewStaff : Html Msg
 viewStaff =
-    div [ id "staff" ] []
+    div
+        [ id "staff"
+        , class "note"
+        ]
+        []
 
 
 viewRandomButton : Html Msg
