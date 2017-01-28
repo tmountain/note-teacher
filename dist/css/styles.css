@@ -140,9 +140,9 @@ html, body {
 .footer {
   margin-left: 16px;
   margin-right: 16px;
-  margin-bottom: 16px;
+  margin-bottom: 0px;
   flex-wrap: wrap;
-  height: 100px;
+  height: 80px;
 }
 
 .instructions {
