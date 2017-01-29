@@ -9,28 +9,36 @@ function drawNote(elementID, note, clef)
 
     var score = vf.EasyScore();
     var system = vf.System();
+    var voice = score.voice([]); // used for empty voice
+    voice.setStrict(false);
 
-    /*
-    tokens = note.split("");
-    tokens[1] = Math.floor((Math.random() * 4) + 3);
-    note = tokens.join("");
-    */
-
-    system.addStave({
-        voices: [
-        score.voice(score.notes(note, {stem: 'up'})),
-        ]
-    }).addClef('treble').addTimeSignature('4/4');
+    if (clef == 'bass') {
+        system.addStave({
+            voices: [ voice ]
+        }).addClef('treble').addTimeSignature('4/4');
+    } else {
+        system.addStave({
+            voices: [
+                score.voice(score.notes(note, {stem: 'up'})),
+            ]
+        }).addClef('treble').addTimeSignature('4/4');
+    }
 
     tokens = note.split("");
     tokens[1] = tokens[1] - 1;
     note = tokens.join("")
 
-    system.addStave({
-        voices: [
-        score.voice(score.notes(note, {clef: 'bass', stem: 'up'})),
-        ]
-    }).addClef('bass').addTimeSignature('4/4');
+    if (clef == 'treble') {
+        system.addStave({
+            voices: [ voice ]
+        }).addClef('bass').addTimeSignature('4/4');
+    } else {
+        system.addStave({
+            voices: [
+                score.voice(score.notes(note, {stem: 'up'})),
+            ]
+        }).addClef('bass').addTimeSignature('4/4');
+    }
 
     system.addConnector();
     vf.draw();
