@@ -9,7 +9,11 @@ function drawNote(elementID, note, clef)
 
     var score = vf.EasyScore();
     var system = vf.System();
-    var voice = score.voice([]); // used for empty voice
+
+    // set up emtpy voice
+    var notes = new VF.GhostNote({ duration: "q" });
+    var voice = new Vex.Flow.Voice('4/4');
+    voice.addTickables([notes]);
     voice.setStrict(false);
 
     if (clef == 'bass') {
@@ -25,7 +29,7 @@ function drawNote(elementID, note, clef)
     }
 
     tokens = note.split("");
-    tokens[1] = tokens[1] - 1;
+    tokens[1] = tokens[1] - 2;
     note = tokens.join("")
 
     if (clef == 'treble') {
@@ -35,8 +39,8 @@ function drawNote(elementID, note, clef)
     } else {
         system.addStave({
             voices: [
-                score.voice(score.notes(note, {stem: 'up'})),
-            ]
+                score.voice(score.notes(note, {clef: 'bass', stem: 'up'})),
+          ]
         }).addClef('bass').addTimeSignature('4/4');
     }
 

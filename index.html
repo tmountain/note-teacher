@@ -20,8 +20,9 @@
 <script>
 var app = Elm.Notes.fullscreen();
 
-app.ports.renderStaff.subscribe(function(note) {
-    drawNote("staff", note, "treble");
+app.ports.renderStaff.subscribe(function(arg) {
+    var [note, cleff] = arg;
+    drawNote("staff", note, cleff);
 });
 </script>
 

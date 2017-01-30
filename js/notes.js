@@ -15826,6 +15826,10 @@ var _user$project$Notes$nav = function (model) {
 var _user$project$Notes$subscriptions = function (model) {
 	return _elm_lang$core$Platform_Sub$none;
 };
+var _user$project$Notes$newCleff = function (cleff) {
+	return _elm_lang$core$String$toLower(
+		_elm_lang$core$Basics$toString(cleff));
+};
 var _user$project$Notes$newNote = F2(
 	function (note, position) {
 		return A2(
@@ -15839,12 +15843,26 @@ var _user$project$Notes$newNote = F2(
 var _user$project$Notes$renderStaff = _elm_lang$core$Native_Platform.outgoingPort(
 	'renderStaff',
 	function (v) {
-		return v;
+		return [v._0, v._1];
 	});
-var _user$project$Notes$Model = F5(
-	function (a, b, c, d, e) {
-		return {note: a, position: b, correct: c, incorrect: d, mdl: e};
+var _user$project$Notes$Model = F6(
+	function (a, b, c, d, e, f) {
+		return {note: a, cleff: b, position: c, correct: d, incorrect: e, mdl: f};
 	});
+var _user$project$Notes$Bass = {ctor: 'Bass'};
+var _user$project$Notes$Treble = {ctor: 'Treble'};
+var _user$project$Notes$cleffMapping = function ($int) {
+	var _p0 = $int;
+	if (_p0 === 1) {
+		return _user$project$Notes$Treble;
+	} else {
+		return _user$project$Notes$Bass;
+	}
+};
+var _user$project$Notes$cleff = A2(
+	_elm_lang$core$Random$map,
+	_user$project$Notes$cleffMapping,
+	A2(_elm_lang$core$Random$int, 1, 3));
 var _user$project$Notes$B = {ctor: 'B'};
 var _user$project$Notes$A = {ctor: 'A'};
 var _user$project$Notes$G = {ctor: 'G'};
@@ -15852,16 +15870,20 @@ var _user$project$Notes$F = {ctor: 'F'};
 var _user$project$Notes$E = {ctor: 'E'};
 var _user$project$Notes$D = {ctor: 'D'};
 var _user$project$Notes$C = {ctor: 'C'};
-var _user$project$Notes$initialModel = A5(_user$project$Notes$Model, _user$project$Notes$C, 4, 0, 0, _debois$elm_mdl$Material$model);
+var _user$project$Notes$initialModel = A6(_user$project$Notes$Model, _user$project$Notes$C, _user$project$Notes$Treble, 4, 0, 0, _debois$elm_mdl$Material$model);
 var _user$project$Notes$init = {
 	ctor: '_Tuple2',
 	_0: _user$project$Notes$initialModel,
 	_1: _user$project$Notes$renderStaff(
-		A2(_user$project$Notes$newNote, _user$project$Notes$initialModel.note, _user$project$Notes$initialModel.position))
+		{
+			ctor: '_Tuple2',
+			_0: A2(_user$project$Notes$newNote, _user$project$Notes$initialModel.note, _user$project$Notes$initialModel.position),
+			_1: _user$project$Notes$newCleff(_user$project$Notes$initialModel.cleff)
+		})
 };
 var _user$project$Notes$noteMapping = function ($int) {
-	var _p0 = $int;
-	switch (_p0) {
+	var _p1 = $int;
+	switch (_p1) {
 		case 1:
 			return _user$project$Notes$C;
 		case 2:
@@ -16051,7 +16073,11 @@ var _user$project$Notes$newNoteMsg = F2(
 				model,
 				{note: noteValue}),
 			_1: _user$project$Notes$renderStaff(
-				A2(_user$project$Notes$newNote, noteValue, model.position))
+				{
+					ctor: '_Tuple2',
+					_0: A2(_user$project$Notes$newNote, noteValue, model.position),
+					_1: _user$project$Notes$newCleff(model.cleff)
+				})
 		};
 	});
 var _user$project$Notes$answerMsg = F2(
@@ -16072,16 +16098,16 @@ var _user$project$Notes$answerMsg = F2(
 	});
 var _user$project$Notes$update = F2(
 	function (msg, model) {
-		var _p1 = msg;
-		switch (_p1.ctor) {
+		var _p2 = msg;
+		switch (_p2.ctor) {
 			case 'NewNote':
-				return A2(_user$project$Notes$newNoteMsg, _p1._0, model);
+				return A2(_user$project$Notes$newNoteMsg, _p2._0, model);
 			case 'Answer':
-				return A2(_user$project$Notes$answerMsg, _p1._0, model);
+				return A2(_user$project$Notes$answerMsg, _p2._0, model);
 			case 'RandomNote':
 				return {ctor: '_Tuple2', _0: model, _1: _user$project$Notes$randomNoteCmd};
 			default:
-				return A3(_debois$elm_mdl$Material$update, _user$project$Notes$Mdl, _p1._0, model);
+				return A3(_debois$elm_mdl$Material$update, _user$project$Notes$Mdl, _p2._0, model);
 		}
 	});
 var _user$project$Notes$main = _elm_lang$html$Html$program(

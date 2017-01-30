@@ -36,6 +36,11 @@ main =
 -- MODEL
 
 
+type Cleff
+    = Treble
+    | Bass
+
+
 type Note
     = C
     | D
@@ -48,6 +53,7 @@ type Note
 
 type alias Model =
     { note : Note
+    , cleff : Cleff
     , position : Int
     , correct : Int
     , incorrect : Int
@@ -62,12 +68,17 @@ type alias Model =
 
 
 initialModel =
-    Model C 4 0 0 Material.model
+    Model C Treble 4 0 0 Material.model
 
 
 init : ( Model, Cmd Msg )
 init =
-    ( initialModel, renderStaff (newNote initialModel.note initialModel.position) )
+    ( initialModel
+    , renderStaff
+        ( (newNote initialModel.note initialModel.position)
+        , (newCleff initialModel.cleff)
+        )
+    )
 
 
 
@@ -85,7 +96,21 @@ type Msg
 -- Sends a string representing a note value to Javascript for rendering
 
 
-port renderStaff : String -> Cmd msg
+port renderStaff : ( String, String ) -> Cmd msg
+
+
+
+-- Generates a cleff corresponding to an integer for random cleff generation
+
+
+cleffMapping : Int -> Cleff
+cleffMapping int =
+    case int of
+        1 ->
+            Treble
+
+        _ ->
+            Bass
 
 
 
@@ -127,6 +152,17 @@ newNote note position =
 
 
 
+-- Takes a cleff and returns a string suitable for rendering
+
+
+newCleff : Cleff -> String
+newCleff cleff =
+    cleff
+        |> toString
+        |> String.toLower
+
+
+
 -- Helper for handling NewNote updates. Ensures that a diff note is generated each time
 
 
@@ -135,7 +171,17 @@ newNoteMsg noteValue model =
     if noteValue == model.note then
         ( model, randomNoteCmd )
     else
-        ( { model | note = noteValue }, renderStaff (newNote noteValue model.position) )
+        ( { model | note = noteValue }
+        , (renderStaff
+            ( newNote noteValue model.position
+            , newCleff model.cleff
+            )
+          )
+        )
+
+
+
+-- Helper for receiving Answer message. Updates counter and generates new random note
 
 
 answerMsg : Note -> Model -> ( Model, Cmd Msg )
@@ -144,6 +190,15 @@ answerMsg noteValue model =
         ( { model | correct = model.correct + 1 }, randomNoteCmd )
     else
         ( { model | incorrect = model.incorrect + 1 }, randomNoteCmd )
+
+
+
+-- Generates a random cleff mapping to a cleff via cleffMapping
+
+
+cleff : Random.Generator Cleff
+cleff =
+    Random.map cleffMapping (Random.int 1 3)
 
 
 
