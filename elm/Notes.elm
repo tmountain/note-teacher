@@ -87,7 +87,9 @@ init =
 
 type Msg
     = NewNote Note
+    | NewCleff Cleff
     | Answer Note
+    | RandomCleff
     | RandomNote
     | Mdl (Material.Msg Msg)
 
@@ -163,6 +165,21 @@ newCleff cleff =
 
 
 
+-- Helper for handling NewStaff updates.
+
+
+newCleffMsg : Cleff -> Model -> ( Model, Cmd Msg )
+newCleffMsg cleffValue model =
+    ( { model | cleff = cleffValue }
+    , (renderStaff
+        ( newNote model.note model.position
+        , newCleff cleffValue
+        )
+      )
+    )
+
+
+
 -- Helper for handling NewNote updates. Ensures that a diff note is generated each time
 
 
@@ -171,13 +188,7 @@ newNoteMsg noteValue model =
     if noteValue == model.note then
         ( model, randomNoteCmd )
     else
-        ( { model | note = noteValue }
-        , (renderStaff
-            ( newNote noteValue model.position
-            , newCleff model.cleff
-            )
-          )
-        )
+        ( { model | note = noteValue }, randomCleffCmd )
 
 
 
@@ -199,6 +210,15 @@ answerMsg noteValue model =
 cleff : Random.Generator Cleff
 cleff =
     Random.map cleffMapping (Random.int 1 3)
+
+
+
+-- Generates a NewCleff command using the cleff function to get a random cleff mapping
+
+
+randomCleffCmd : Cmd Msg
+randomCleffCmd =
+    Random.generate NewCleff cleff
 
 
 
@@ -225,8 +245,14 @@ update msg model =
         NewNote noteValue ->
             newNoteMsg noteValue model
 
+        NewCleff cleffValue ->
+            newCleffMsg cleffValue model
+
         Answer noteValue ->
             answerMsg noteValue model
+
+        RandomCleff ->
+            ( model, randomCleffCmd )
 
         RandomNote ->
             ( model, randomNoteCmd )

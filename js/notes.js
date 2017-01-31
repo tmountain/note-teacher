@@ -15845,6 +15845,21 @@ var _user$project$Notes$renderStaff = _elm_lang$core$Native_Platform.outgoingPor
 	function (v) {
 		return [v._0, v._1];
 	});
+var _user$project$Notes$newCleffMsg = F2(
+	function (cleffValue, model) {
+		return {
+			ctor: '_Tuple2',
+			_0: _elm_lang$core$Native_Utils.update(
+				model,
+				{cleff: cleffValue}),
+			_1: _user$project$Notes$renderStaff(
+				{
+					ctor: '_Tuple2',
+					_0: A2(_user$project$Notes$newNote, model.note, model.position),
+					_1: _user$project$Notes$newCleff(cleffValue)
+				})
+		};
+	});
 var _user$project$Notes$Model = F6(
 	function (a, b, c, d, e, f) {
 		return {note: a, cleff: b, position: c, correct: d, incorrect: e, mdl: f};
@@ -15920,6 +15935,7 @@ var _user$project$Notes$viewRandomButton = A2(
 		_0: _elm_lang$html$Html$text('Random Note'),
 		_1: {ctor: '[]'}
 	});
+var _user$project$Notes$RandomCleff = {ctor: 'RandomCleff'};
 var _user$project$Notes$Answer = function (a) {
 	return {ctor: 'Answer', _0: a};
 };
@@ -16061,6 +16077,10 @@ var _user$project$Notes$viewAnswerButton = function (noteValue) {
 			_1: {ctor: '[]'}
 		});
 };
+var _user$project$Notes$NewCleff = function (a) {
+	return {ctor: 'NewCleff', _0: a};
+};
+var _user$project$Notes$randomCleffCmd = A2(_elm_lang$core$Random$generate, _user$project$Notes$NewCleff, _user$project$Notes$cleff);
 var _user$project$Notes$NewNote = function (a) {
 	return {ctor: 'NewNote', _0: a};
 };
@@ -16072,12 +16092,7 @@ var _user$project$Notes$newNoteMsg = F2(
 			_0: _elm_lang$core$Native_Utils.update(
 				model,
 				{note: noteValue}),
-			_1: _user$project$Notes$renderStaff(
-				{
-					ctor: '_Tuple2',
-					_0: A2(_user$project$Notes$newNote, noteValue, model.position),
-					_1: _user$project$Notes$newCleff(model.cleff)
-				})
+			_1: _user$project$Notes$randomCleffCmd
 		};
 	});
 var _user$project$Notes$answerMsg = F2(
@@ -16102,8 +16117,12 @@ var _user$project$Notes$update = F2(
 		switch (_p2.ctor) {
 			case 'NewNote':
 				return A2(_user$project$Notes$newNoteMsg, _p2._0, model);
+			case 'NewCleff':
+				return A2(_user$project$Notes$newCleffMsg, _p2._0, model);
 			case 'Answer':
 				return A2(_user$project$Notes$answerMsg, _p2._0, model);
+			case 'RandomCleff':
+				return {ctor: '_Tuple2', _0: model, _1: _user$project$Notes$randomCleffCmd};
 			case 'RandomNote':
 				return {ctor: '_Tuple2', _0: model, _1: _user$project$Notes$randomNoteCmd};
 			default:
