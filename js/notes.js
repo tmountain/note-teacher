@@ -15831,13 +15831,13 @@ var _user$project$Notes$newCleff = function (cleff) {
 		_elm_lang$core$Basics$toString(cleff));
 };
 var _user$project$Notes$newNote = F2(
-	function (note, position) {
+	function (note, octave) {
 		return A2(
 			_elm_lang$core$Basics_ops['++'],
 			_elm_lang$core$Basics$toString(note),
 			A2(
 				_elm_lang$core$Basics_ops['++'],
-				_elm_lang$core$Basics$toString(position),
+				_elm_lang$core$Basics$toString(octave),
 				'/w'));
 	});
 var _user$project$Notes$renderStaff = _elm_lang$core$Native_Platform.outgoingPort(
@@ -15845,24 +15845,24 @@ var _user$project$Notes$renderStaff = _elm_lang$core$Native_Platform.outgoingPor
 	function (v) {
 		return [v._0, v._1];
 	});
-var _user$project$Notes$newCleffMsg = F2(
-	function (cleffValue, model) {
+var _user$project$Notes$newOctaveMsg = F2(
+	function (octaveValue, model) {
 		return {
 			ctor: '_Tuple2',
 			_0: _elm_lang$core$Native_Utils.update(
 				model,
-				{cleff: cleffValue}),
+				{octave: octaveValue}),
 			_1: _user$project$Notes$renderStaff(
 				{
 					ctor: '_Tuple2',
-					_0: A2(_user$project$Notes$newNote, model.note, model.position),
-					_1: _user$project$Notes$newCleff(cleffValue)
+					_0: A2(_user$project$Notes$newNote, model.note, octaveValue),
+					_1: _user$project$Notes$newCleff(model.cleff)
 				})
 		};
 	});
 var _user$project$Notes$Model = F6(
 	function (a, b, c, d, e, f) {
-		return {note: a, cleff: b, position: c, correct: d, incorrect: e, mdl: f};
+		return {note: a, cleff: b, octave: c, correct: d, incorrect: e, mdl: f};
 	});
 var _user$project$Notes$Bass = {ctor: 'Bass'};
 var _user$project$Notes$Treble = {ctor: 'Treble'};
@@ -15892,7 +15892,7 @@ var _user$project$Notes$init = {
 	_1: _user$project$Notes$renderStaff(
 		{
 			ctor: '_Tuple2',
-			_0: A2(_user$project$Notes$newNote, _user$project$Notes$initialModel.note, _user$project$Notes$initialModel.position),
+			_0: A2(_user$project$Notes$newNote, _user$project$Notes$initialModel.note, _user$project$Notes$initialModel.octave),
 			_1: _user$project$Notes$newCleff(_user$project$Notes$initialModel.cleff)
 		})
 };
@@ -15919,6 +15919,98 @@ var _user$project$Notes$note = A2(
 	_elm_lang$core$Random$map,
 	_user$project$Notes$noteMapping,
 	A2(_elm_lang$core$Random$int, 1, 7));
+var _user$project$Notes$allowedNote = F3(
+	function (note, cleff, octave) {
+		var _p2 = octave;
+		switch (_p2) {
+			case 1:
+				return A2(
+					_elm_lang$core$List$member,
+					note,
+					{
+						ctor: '::',
+						_0: _user$project$Notes$G,
+						_1: {
+							ctor: '::',
+							_0: _user$project$Notes$A,
+							_1: {
+								ctor: '::',
+								_0: _user$project$Notes$B,
+								_1: {ctor: '[]'}
+							}
+						}
+					}) && _elm_lang$core$Native_Utils.eq(cleff, _user$project$Notes$Bass);
+			case 2:
+				return _elm_lang$core$Native_Utils.eq(cleff, _user$project$Notes$Bass);
+			case 3:
+				return (A2(
+					_elm_lang$core$List$member,
+					note,
+					{
+						ctor: '::',
+						_0: _user$project$Notes$E,
+						_1: {
+							ctor: '::',
+							_0: _user$project$Notes$F,
+							_1: {
+								ctor: '::',
+								_0: _user$project$Notes$G,
+								_1: {
+									ctor: '::',
+									_0: _user$project$Notes$A,
+									_1: {
+										ctor: '::',
+										_0: _user$project$Notes$B,
+										_1: {ctor: '[]'}
+									}
+								}
+							}
+						}
+					}) && _elm_lang$core$Native_Utils.eq(cleff, _user$project$Notes$Treble)) || _elm_lang$core$Native_Utils.eq(cleff, _user$project$Notes$Bass);
+			case 4:
+				return (A2(
+					_elm_lang$core$List$member,
+					note,
+					{
+						ctor: '::',
+						_0: _user$project$Notes$C,
+						_1: {
+							ctor: '::',
+							_0: _user$project$Notes$D,
+							_1: {
+								ctor: '::',
+								_0: _user$project$Notes$E,
+								_1: {
+									ctor: '::',
+									_0: _user$project$Notes$F,
+									_1: {
+										ctor: '::',
+										_0: _user$project$Notes$G,
+										_1: {ctor: '[]'}
+									}
+								}
+							}
+						}
+					}) && _elm_lang$core$Native_Utils.eq(cleff, _user$project$Notes$Bass)) || _elm_lang$core$Native_Utils.eq(cleff, _user$project$Notes$Treble);
+			case 5:
+				return _elm_lang$core$Native_Utils.eq(cleff, _user$project$Notes$Treble);
+			case 6:
+				return A2(
+					_elm_lang$core$List$member,
+					note,
+					{
+						ctor: '::',
+						_0: _user$project$Notes$C,
+						_1: {
+							ctor: '::',
+							_0: _user$project$Notes$D,
+							_1: {ctor: '[]'}
+						}
+					}) && _elm_lang$core$Native_Utils.eq(cleff, _user$project$Notes$Treble);
+			default:
+				return false;
+		}
+	});
 var _user$project$Notes$Mdl = function (a) {
 	return {ctor: 'Mdl', _0: a};
 };
@@ -16077,6 +16169,23 @@ var _user$project$Notes$viewAnswerButton = function (noteValue) {
 			_1: {ctor: '[]'}
 		});
 };
+var _user$project$Notes$NewOctave = function (a) {
+	return {ctor: 'NewOctave', _0: a};
+};
+var _user$project$Notes$randomOctaveCmd = A2(
+	_elm_lang$core$Random$generate,
+	_user$project$Notes$NewOctave,
+	A2(_elm_lang$core$Random$int, 1, 5));
+var _user$project$Notes$newCleffMsg = F2(
+	function (cleffValue, model) {
+		return {
+			ctor: '_Tuple2',
+			_0: _elm_lang$core$Native_Utils.update(
+				model,
+				{cleff: cleffValue}),
+			_1: _user$project$Notes$randomOctaveCmd
+		};
+	});
 var _user$project$Notes$NewCleff = function (a) {
 	return {ctor: 'NewCleff', _0: a};
 };
@@ -16113,20 +16222,22 @@ var _user$project$Notes$answerMsg = F2(
 	});
 var _user$project$Notes$update = F2(
 	function (msg, model) {
-		var _p2 = msg;
-		switch (_p2.ctor) {
+		var _p3 = msg;
+		switch (_p3.ctor) {
 			case 'NewNote':
-				return A2(_user$project$Notes$newNoteMsg, _p2._0, model);
+				return A2(_user$project$Notes$newNoteMsg, _p3._0, model);
 			case 'NewCleff':
-				return A2(_user$project$Notes$newCleffMsg, _p2._0, model);
+				return A2(_user$project$Notes$newCleffMsg, _p3._0, model);
+			case 'NewOctave':
+				return A2(_user$project$Notes$newOctaveMsg, _p3._0, model);
 			case 'Answer':
-				return A2(_user$project$Notes$answerMsg, _p2._0, model);
+				return A2(_user$project$Notes$answerMsg, _p3._0, model);
 			case 'RandomCleff':
 				return {ctor: '_Tuple2', _0: model, _1: _user$project$Notes$randomCleffCmd};
 			case 'RandomNote':
 				return {ctor: '_Tuple2', _0: model, _1: _user$project$Notes$randomNoteCmd};
 			default:
-				return A3(_debois$elm_mdl$Material$update, _user$project$Notes$Mdl, _p2._0, model);
+				return A3(_debois$elm_mdl$Material$update, _user$project$Notes$Mdl, _p3._0, model);
 		}
 	});
 var _user$project$Notes$main = _elm_lang$html$Html$program(

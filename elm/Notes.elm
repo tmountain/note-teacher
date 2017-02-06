@@ -51,10 +51,14 @@ type Note
     | B
 
 
+type alias Octave =
+    Int
+
+
 type alias Model =
     { note : Note
     , cleff : Cleff
-    , position : Int
+    , octave : Octave
     , correct : Int
     , incorrect : Int
     , mdl :
@@ -75,7 +79,7 @@ init : ( Model, Cmd Msg )
 init =
     ( initialModel
     , renderStaff
-        ( (newNote initialModel.note initialModel.position)
+        ( (newNote initialModel.note initialModel.octave)
         , (newCleff initialModel.cleff)
         )
     )
@@ -88,6 +92,7 @@ init =
 type Msg
     = NewNote Note
     | NewCleff Cleff
+    | NewOctave Int
     | Answer Note
     | RandomCleff
     | RandomNote
@@ -145,12 +150,12 @@ noteMapping int =
 
 
 
--- Takes a note and a position and returns a string suitable for rendering
+-- Takes a note and a octave and returns a string suitable for rendering
 
 
 newNote : Note -> Int -> String
-newNote note position =
-    (toString note) ++ (toString position) ++ "/w"
+newNote note octave =
+    (toString note) ++ (toString octave) ++ "/w"
 
 
 
@@ -165,18 +170,27 @@ newCleff cleff =
 
 
 
--- Helper for handling NewStaff updates.
+-- Helper for handling NewOctave updates
+
+
+newOctaveMsg : Octave -> Model -> ( Model, Cmd Msg )
+newOctaveMsg octaveValue model =
+    ( { model | octave = octaveValue }
+    , (renderStaff
+        ( newNote model.note octaveValue
+        , newCleff model.cleff
+        )
+      )
+    )
+
+
+
+-- Helper for handling NewCleff updates
 
 
 newCleffMsg : Cleff -> Model -> ( Model, Cmd Msg )
 newCleffMsg cleffValue model =
-    ( { model | cleff = cleffValue }
-    , (renderStaff
-        ( newNote model.note model.position
-        , newCleff cleffValue
-        )
-      )
-    )
+    ( { model | cleff = cleffValue }, randomOctaveCmd )
 
 
 
@@ -201,6 +215,46 @@ answerMsg noteValue model =
         ( { model | correct = model.correct + 1 }, randomNoteCmd )
     else
         ( { model | incorrect = model.incorrect + 1 }, randomNoteCmd )
+
+
+{-| Defines allowed notes for octave generator
+      * e3 lowest for treble
+      * d6 highest for treble
+      * g1 lowest for bass
+      * g4 highest for bass
+-}
+allowedNote : Note -> Cleff -> Octave -> Bool
+allowedNote note cleff octave =
+    case octave of
+        1 ->
+            ((List.member note [ G, A, B ]) && cleff == Bass)
+
+        2 ->
+            cleff == Bass
+
+        3 ->
+            ((List.member note [ E, F, G, A, B ]) && cleff == Treble) || cleff == Bass
+
+        4 ->
+            ((List.member note [ C, D, E, F, G ]) && cleff == Bass) || cleff == Treble
+
+        5 ->
+            cleff == Treble
+
+        6 ->
+            ((List.member note [ C, D ]) && cleff == Treble)
+
+        _ ->
+            False
+
+
+
+-- Generates a random octave
+
+
+randomOctaveCmd : Cmd Msg
+randomOctaveCmd =
+    Random.generate NewOctave (Random.int 1 5)
 
 
 
@@ -247,6 +301,9 @@ update msg model =
 
         NewCleff cleffValue ->
             newCleffMsg cleffValue model
+
+        NewOctave octaveValue ->
+            newOctaveMsg octaveValue model
 
         Answer noteValue ->
             answerMsg noteValue model

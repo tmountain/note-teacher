@@ -28,10 +28,6 @@ function drawNote(elementID, note, clef)
         }).addClef('treble').addTimeSignature('4/4');
     }
 
-    tokens = note.split("");
-    tokens[1] = tokens[1] - 2;
-    note = tokens.join("")
-
     if (clef == 'treble') {
         system.addStave({
             voices: [ voice ]
