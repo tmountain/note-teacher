@@ -175,13 +175,18 @@ newCleff cleff =
 
 newOctaveMsg : Octave -> Model -> ( Model, Cmd Msg )
 newOctaveMsg octaveValue model =
-    ( { model | octave = octaveValue }
-    , (renderStaff
-        ( newNote model.note octaveValue
-        , newCleff model.cleff
+    -- this ensures that we keep the generated note / cleff / octave
+    -- pairs inside of the desired constraints
+    if allowedNote model.note model.cleff octaveValue then
+        ( { model | octave = octaveValue }
+        , (renderStaff
+            ( newNote model.note octaveValue
+            , newCleff model.cleff
+            )
+          )
         )
-      )
-    )
+    else
+        ( model, randomOctaveCmd )
 
 
 

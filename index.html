@@ -23,8 +23,6 @@ var app = Elm.Notes.fullscreen();
 app.ports.renderStaff.subscribe(function(arg) {
     var [note, cleff] = arg;
 
-    tokens = note.split("");
-    cleff = 'bass';
     // e3 lowest for treble
     // d6 highest for treble
 
@@ -32,10 +30,16 @@ app.ports.renderStaff.subscribe(function(arg) {
     // g4 highest for bass
 
     // c is the start of each octave
+    /*
+    tokens = note.split("");
+    cleff = 'bass';
+
     tokens[0] = 'g';
     tokens[1] = 1;
     note = tokens.join("")
+    */
 
+    console.log("drawNote('staff', " + note + ", " + cleff + ");");
     drawNote("staff", note, cleff);
 });
 </script>

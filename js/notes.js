@@ -15845,21 +15845,6 @@ var _user$project$Notes$renderStaff = _elm_lang$core$Native_Platform.outgoingPor
 	function (v) {
 		return [v._0, v._1];
 	});
-var _user$project$Notes$newOctaveMsg = F2(
-	function (octaveValue, model) {
-		return {
-			ctor: '_Tuple2',
-			_0: _elm_lang$core$Native_Utils.update(
-				model,
-				{octave: octaveValue}),
-			_1: _user$project$Notes$renderStaff(
-				{
-					ctor: '_Tuple2',
-					_0: A2(_user$project$Notes$newNote, model.note, octaveValue),
-					_1: _user$project$Notes$newCleff(model.cleff)
-				})
-		};
-	});
 var _user$project$Notes$Model = F6(
 	function (a, b, c, d, e, f) {
 		return {note: a, cleff: b, octave: c, correct: d, incorrect: e, mdl: f};
@@ -16176,6 +16161,21 @@ var _user$project$Notes$randomOctaveCmd = A2(
 	_elm_lang$core$Random$generate,
 	_user$project$Notes$NewOctave,
 	A2(_elm_lang$core$Random$int, 1, 5));
+var _user$project$Notes$newOctaveMsg = F2(
+	function (octaveValue, model) {
+		return A3(_user$project$Notes$allowedNote, model.note, model.cleff, octaveValue) ? {
+			ctor: '_Tuple2',
+			_0: _elm_lang$core$Native_Utils.update(
+				model,
+				{octave: octaveValue}),
+			_1: _user$project$Notes$renderStaff(
+				{
+					ctor: '_Tuple2',
+					_0: A2(_user$project$Notes$newNote, model.note, octaveValue),
+					_1: _user$project$Notes$newCleff(model.cleff)
+				})
+		} : {ctor: '_Tuple2', _0: model, _1: _user$project$Notes$randomOctaveCmd};
+	});
 var _user$project$Notes$newCleffMsg = F2(
 	function (cleffValue, model) {
 		return {
