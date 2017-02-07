@@ -15,6 +15,7 @@ this in <http://guide.elm-lang.org/architecture/index.html>
 import Html exposing (..)
 import Html.Attributes exposing (id, class, style)
 import Html.Events exposing (onClick)
+import FormatNumber exposing (Locale)
 import Material
 import Material.Scheme
 import Material.Color as Color
@@ -365,6 +366,8 @@ settingsIcon model =
         [ viewCorrect model
         , text "  "
         , viewIncorrect model
+        , text "  "
+        , viewPct model
         ]
 
 
@@ -410,6 +413,31 @@ footer model =
 instructions : Html Msg
 instructions =
     div [ class "instructions" ] [ text "Tap the Spacebar" ]
+
+
+
+-- Helpers for viewing percent correct
+
+
+defaultLocale : Locale
+defaultLocale =
+    { decimals = 2
+    , thousandSeparator = ","
+    , decimalSeparator = "."
+    }
+
+
+pctCorrect right wrong =
+    if right == 0 then
+        0
+    else
+        right / (wrong + right) * 100
+
+
+viewPct : Model -> Html Msg
+viewPct model =
+    span [ class "fa fa-percent" ]
+        [ text <| FormatNumber.formatFloat defaultLocale (pctCorrect (toFloat model.correct) (toFloat model.incorrect)) ]
 
 
 viewCorrect : Model -> Html Msg
